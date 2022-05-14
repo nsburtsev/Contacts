@@ -14,20 +14,22 @@ class ViewController: UIViewController {
     var contacts: [ContactProtocol] = [] {
         didSet {
             contacts.sort{ $0.title < $1.title }
+            
+            // сохранение контактов в хранилище
+            storage.save(contacts: contacts)
         }
     }
     
+    // свойство содержащее в себе ссылку на "хранилище"
+    var storage: ContactStorageProtocol!
+    
     private func loadContacts() {
-        contacts.append(
-            Contact(title: "Саня Техосмотр", phone: "+79991231231"))
-        contacts.append(
-            Contact(title: "Владимир анатольевич", phone: "+78121231231"))
-        contacts.append(
-            Contact(title: "Сильвестр", phone: "+70001231231"))
+        contacts = storage.load()
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        storage = ContactStorage()
         loadContacts()
     }
     
